@@ -1,4 +1,4 @@
-FROM php:7.0
+FROM php:7-fpm
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
