@@ -56,14 +56,11 @@ RUN buildDeps=" \
     && printf "\n" | pecl install mongo \
     && pecl install mongodb \
     && pecl install redis-2.2.8 \
-    && for ext in $phpModules; do \
-           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
-       done \
     && docker-php-source delete \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
 # Install additional packages
-RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends
 
 # Install composer and put binary into $PATH
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -90,6 +87,8 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get install -y nodejs build-essential
 
-RUN apt-get install -y rsync
+RUN apt-get install -y rsync vim wget \
+&& rm -r /var/lib/apt/lists/* \
+&& rm -rf /tmp/*
 
 COPY msmtprc /etc/
