@@ -1,8 +1,8 @@
-FROM php:7.0
+FROM php:7-fpm
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
-ENV XDEBUG_VERSION 2.5.0
+ENV XDEBUG_VERSION 2.4.1
 
 # Install php extensions
 RUN buildDeps=" \
@@ -53,14 +53,11 @@ RUN buildDeps=" \
     && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
-    && for ext in $phpModules; do \
-           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
-       done \
     && docker-php-source delete \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false
 
 # Install additional packages
-RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends
 
 # Install composer and put binary into $PATH
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -87,9 +84,20 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get install -y nodejs build-essential
 
-RUN apt-get install -y rsync
+RUN apt-get install -y rsync vim wget \
+&& rm -rf /var/lib/apt/lists/* \
+&& rm -rf /tmp/*
+
+RUN rm -rf /etc/localtime \
+&& ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+&& echo "alias ls='ls -lhG --color=auto'" >> /root/.bashrc \
+&& echo "alias ll='ls -lhG --color=auto'" >> /root/.bashrc \
+&& . /root/.bashrc \
+&& echo "post_max_size = 50M" >> /usr/local/etc/php/conf.d/php.ini \
+&& echo "upload_max_filesize = 50M" >> /usr/local/etc/php/conf.d/php.ini \
+&& echo "date.timezone = PRC" >> /usr/local/etc/php/conf.d/php.ini \
+&& echo "short_open_tag = On" >> /usr/local/etc/php/conf.d/php.ini \
+&& echo "cgi.fix_pathinfo=0" >> /usr/local/etc/php/conf.d/php.ini \
+&& echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini
 
 COPY msmtprc /etc/
-COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php", "-a"]
