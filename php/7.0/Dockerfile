@@ -1,8 +1,8 @@
-FROM php:7-fpm
+FROM php:7.0
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
-ENV XDEBUG_VERSION 2.4.1
+ENV XDEBUG_VERSION 2.5.0
 
 # Install php extensions
 RUN buildDeps=" \
@@ -53,11 +53,14 @@ RUN buildDeps=" \
     && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
+    && for ext in $phpModules; do \
+           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
+       done \
     && docker-php-source delete \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
 # Install additional packages
-RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends 
+RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 # Install composer and put binary into $PATH
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -84,9 +87,9 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get install -y nodejs build-essential
 
-RUN apt-get install -y rsync \
-&& rm -rf /var/lib/apt/lists/* \
-&& rm -rf /tmp/*
-
+RUN apt-get install -y rsync
 
 COPY msmtprc /etc/
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php", "-a"]
