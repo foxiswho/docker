@@ -1,8 +1,8 @@
-FROM php:7-fpm
+FROM php:7.0
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
-ENV XDEBUG_VERSION 2.4.1
+ENV XDEBUG_VERSION 2.5.4
 
 # Install php extensions
 RUN buildDeps=" \
@@ -50,11 +50,15 @@ RUN buildDeps=" \
     && docker-php-ext-configure ldap --with-ldap-sasl \
     && docker-php-ext-install $phpModules \
     && printf "\n" | pecl install amqp \
-    && printf "\n" | pecl install memcache \
+    && pecl install igbinary \
+#    && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
+    && for ext in $phpModules; do \
+           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
+       done \
     && docker-php-source delete \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
 # Install additional packages
 RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends
@@ -84,10 +88,6 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get install -y nodejs build-essential
 
-RUN apt-get install -y rsync vim wget \
-&& rm -rf /var/lib/apt/lists/* \
-&& rm -rf /tmp/*
-
 RUN rm -rf /etc/localtime \
 && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 && echo "alias ls='ls -lhG --color=auto'" >> /root/.bashrc \
@@ -99,5 +99,15 @@ RUN rm -rf /etc/localtime \
 && echo "short_open_tag = On" >> /usr/local/etc/php/conf.d/php.ini \
 && echo "cgi.fix_pathinfo=0" >> /usr/local/etc/php/conf.d/php.ini \
 && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini
+
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install yarn
+
+RUN apt-get install -y rsync  vim wget
+
+RUN rm -r /var/lib/apt/lists/* \
+&& rm -rf /tmp/*
 
 COPY msmtprc /etc/

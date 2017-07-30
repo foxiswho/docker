@@ -2,7 +2,7 @@ FROM php:7.0
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
-ENV XDEBUG_VERSION 2.5.0
+ENV XDEBUG_VERSION 2.5.4
 
 # Install php extensions
 RUN buildDeps=" \
@@ -50,7 +50,8 @@ RUN buildDeps=" \
     && docker-php-ext-configure ldap --with-ldap-sasl \
     && docker-php-ext-install $phpModules \
     && printf "\n" | pecl install amqp \
-    && printf "\n" | pecl install memcache \
+    && pecl install igbinary \
+#    && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
     && for ext in $phpModules; do \
@@ -87,7 +88,14 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get install -y nodejs build-essential
 
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install yarn
+
 RUN apt-get install -y rsync
+
+RUN rm -r /var/lib/apt/lists/*
 
 COPY msmtprc /etc/
 COPY entrypoint.sh /entrypoint.sh
