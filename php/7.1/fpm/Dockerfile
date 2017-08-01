@@ -53,6 +53,9 @@ RUN buildDeps=" \
     && pecl install igbinary \
     && pecl install mongodb \
     && pecl install redis \
+    && for ext in $phpModules; do \
+           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
+       done \
     && docker-php-source delete \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
@@ -106,7 +109,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update && apt-get install yarn
 
-RUN apt-get update && apt-get install -y rsync vim wget
+RUN apt-get install -y rsync  vim wget
 
 RUN rm -r /var/lib/apt/lists/* \
 && rm -rf /tmp/*
