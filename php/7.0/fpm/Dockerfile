@@ -51,12 +51,8 @@ RUN buildDeps=" \
     && docker-php-ext-install $phpModules \
     && printf "\n" | pecl install amqp \
     && pecl install igbinary \
-#    && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
-    && for ext in $phpModules; do \
-           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
-       done \
     && docker-php-source delete \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
