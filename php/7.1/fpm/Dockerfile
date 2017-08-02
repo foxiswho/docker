@@ -61,7 +61,7 @@ RUN buildDeps=" \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
 # Install additional packages
-RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -r /var/lib/apt/lists/*
 
 # Install composer and put binary into $PATH
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -88,18 +88,6 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get install -y nodejs build-essential
 
-RUN rm -rf /etc/localtime \
-&& ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-&& echo "alias ls='ls -lhG --color=auto'" >> /root/.bashrc \
-&& echo "alias ll='ls -lhG --color=auto'" >> /root/.bashrc \
-&& . /root/.bashrc \
-&& echo "post_max_size = 50M" >> /usr/local/etc/php/conf.d/php.ini \
-&& echo "upload_max_filesize = 50M" >> /usr/local/etc/php/conf.d/php.ini \
-&& echo "date.timezone = PRC" >> /usr/local/etc/php/conf.d/php.ini \
-&& echo "short_open_tag = On" >> /usr/local/etc/php/conf.d/php.ini \
-&& echo "cgi.fix_pathinfo=0" >> /usr/local/etc/php/conf.d/php.ini \
-&& echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini
-
 # Install Yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -107,8 +95,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 
 RUN apt-get install -y rsync
 
-#RUN apt-get update && apt-get install -y vim wget procps
-RUN rm -rf /var/lib/apt/lists/* \
-&& rm -rf /tmp/*
+RUN rm -r /var/lib/apt/lists/*
 
 COPY msmtprc /etc/
