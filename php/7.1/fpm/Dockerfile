@@ -86,7 +86,7 @@ RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar \
 
 # Install Node.js
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-    && apt-get install -y nodejs build-essential vim wget
+    && apt-get install -y nodejs build-essential
 
 RUN rm -rf /etc/localtime \
 && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -107,6 +107,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 
 RUN apt-get install -y rsync
 
+RUN apt-get update && apt-get install -y vim wget procps
 RUN rm -rf /var/lib/apt/lists/* \
 && rm -rf /tmp/*
 
