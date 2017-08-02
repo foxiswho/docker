@@ -29,6 +29,9 @@ RUN buildDeps=" \
         libxpm-dev \
         libxslt1-dev \
         zlib1g-dev \
+        vim \
+        wget \
+        ps \
     " \
     && phpModules=" \
         bcmath bz2 calendar dba enchant exif ftp gd gettext gmp imap intl ldap mbstring mcrypt mysqli opcache pcntl pdo pdo_dblib pdo_mysql pdo_pgsql pgsql pspell shmop snmp soap sockets sysvmsg sysvsem sysvshm tidy wddx xmlrpc xsl zip xdebug \
@@ -51,6 +54,7 @@ RUN buildDeps=" \
     && docker-php-ext-install $phpModules \
     && printf "\n" | pecl install amqp \
     && pecl install igbinary \
+#    && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
     && for ext in $phpModules; do \
@@ -58,11 +62,6 @@ RUN buildDeps=" \
        done \
     && docker-php-source delete \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
-
-# 开启所有扩展
-#&& for ext in $phpModules; do \
-#           rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
-#       done \
 
 # Install additional packages
 RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -rf /var/lib/apt/lists/*
@@ -109,9 +108,9 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update && apt-get install yarn
 
-RUN apt-get install -y rsync  vim wget
+RUN apt-get install -y rsync
 
-RUN rm -r /var/lib/apt/lists/* \
+RUN rm -rf /var/lib/apt/lists/* \
 && rm -rf /tmp/*
 
 COPY msmtprc /etc/
