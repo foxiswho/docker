@@ -29,9 +29,6 @@ RUN buildDeps=" \
         libxpm-dev \
         libxslt1-dev \
         zlib1g-dev \
-        vim \
-        wget \
-        ps \
     " \
     && phpModules=" \
         bcmath bz2 calendar dba enchant exif ftp gd gettext gmp imap intl ldap mbstring mcrypt mysqli opcache pcntl pdo pdo_dblib pdo_mysql pdo_pgsql pgsql pspell shmop snmp soap sockets sysvmsg sysvsem sysvshm tidy wddx xmlrpc xsl zip xdebug \
@@ -64,7 +61,7 @@ RUN buildDeps=" \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps
 
 # Install additional packages
-RUN apt-get update && apt-get install -y git msmtp-mta openssh-client --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git msmtp-mta openssh-client vim wget ps --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 # Install composer and put binary into $PATH
 RUN curl -sS https://getcomposer.org/installer | php \
