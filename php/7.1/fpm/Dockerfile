@@ -107,7 +107,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 
 RUN apt-get install -y rsync
 
-RUN apt-get update && apt-get install -y vim wget procps
+#RUN apt-get update && apt-get install -y vim wget procps
 RUN rm -rf /var/lib/apt/lists/* \
 && rm -rf /tmp/*
 
