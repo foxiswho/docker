@@ -111,6 +111,6 @@ RUN rm -rf /etc/localtime \
 && echo "cgi.fix_pathinfo=0" >> /usr/local/etc/php/conf.d/php.ini \
 && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini
 
-RUN apt-get update && apt-get install -y vim
+#RUN apt-get update && apt-get install -y vim
 #RUN rm -rf /var/lib/apt/lists/* \  wget procps
 #&& rm -rf /tmp/*
