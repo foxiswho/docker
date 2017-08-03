@@ -4,6 +4,7 @@ MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
 ENV XDEBUG_VERSION 2.5.4
 
+RUN apt-get update && apt-get install -y vim wget procps
 # Install php extensions
 RUN buildDeps=" \
         freetds-dev \
