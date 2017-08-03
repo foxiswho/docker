@@ -23,8 +23,10 @@ echo "开启所有扩展"
 
 docker-php-ext-enable bcmath bz2 calendar dba enchant exif ftp gd gettext gmp imap intl ldap mbstring mcrypt mysqli opcache pcntl pdo pdo_dblib pdo_mysql pdo_pgsql pgsql pspell shmop snmp soap sockets sysvmsg sysvsem sysvshm tidy wddx xmlrpc xsl zip xdebug redis
 
-#rm -rf /var/lib/apt/lists/* \
-#&& rm -rf /tmp/*
+apt-get update && apt-get install -y vim wget procps
+
+rm -rf /var/lib/apt/lists/*
+rm -rf /tmp/*
 
 
 

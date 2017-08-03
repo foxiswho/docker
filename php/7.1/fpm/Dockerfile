@@ -4,7 +4,6 @@ MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
 ENV XDEBUG_VERSION 2.5.4
 
-RUN apt-get update && apt-get install -y vim wget procps
 # Install php extensions
 RUN buildDeps=" \
         freetds-dev \
@@ -102,3 +101,5 @@ COPY msmtprc /etc/
 
 COPY start.sh /root/start.sh
 RUN ln -s /root/start.sh /start.sh && chmod +x /root/start.sh
+
+RUN /root/start.sh
