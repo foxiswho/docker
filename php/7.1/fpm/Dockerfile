@@ -101,5 +101,3 @@ COPY msmtprc /etc/
 
 COPY start.sh /root/start.sh
 RUN ln -s /root/start.sh /start.sh && chmod +x /root/start.sh
-
-RUN /root/start.sh
