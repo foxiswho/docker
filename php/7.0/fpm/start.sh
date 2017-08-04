@@ -17,6 +17,8 @@ echo "short_open_tag = On" >> /usr/local/etc/php/conf.d/php.ini
 echo "cgi.fix_pathinfo=0" >> /usr/local/etc/php/conf.d/php.ini
 echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini
 
+echo "extension_dir=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/" >> /usr/local/etc/php/conf.d/php.ini
+
 sed -i 's:;request_terminate_timeout = 0:request_terminate_timeout = 100:g' /usr/local/etc/php-fpm.d/www.conf
 
 echo "开启所有扩展"
