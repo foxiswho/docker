@@ -1,3 +1,16 @@
+
+
+# PHP 7.X
+
+安装完成后 一定要配置PHP
+`主要 启用PHP 扩展`
+```shell
+docker exec -it macphp71_php_1 /start.sh
+```
+`macphp71_php_1` PHP容器名字 可能生成的不一样
+
+
+
 # TetraWeb PHP CI Kit with Docker
 
 [![Build Status](https://travis-ci.org/TetraWeb/docker.svg?branch=master)](https://travis-ci.org/TetraWeb/docker)
