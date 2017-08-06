@@ -1,4 +1,4 @@
-FROM php:7.0
+FROM php:7.0-fpm
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
@@ -98,6 +98,5 @@ RUN apt-get install -y rsync
 RUN rm -r /var/lib/apt/lists/*
 
 COPY msmtprc /etc/
-
 COPY start.sh /root/start.sh
 RUN ln -s /root/start.sh /start.sh && chmod +x /root/start.sh
