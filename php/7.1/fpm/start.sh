@@ -9,7 +9,7 @@ echo "alias ls='ls -lhG --color=auto'" >> /root/.bashrc
 echo "alias ll='ls -lhG --color=auto'" >> /root/.bashrc
 . /root/.bashrc
 
-eccho "设置 php.ini"
+echo "设置 php.ini"
 echo "post_max_size = 50M" >> /usr/local/etc/php/conf.d/php.ini
 echo "upload_max_filesize = 50M" >> /usr/local/etc/php/conf.d/php.ini
 echo "date.timezone = PRC" >> /usr/local/etc/php/conf.d/php.ini
