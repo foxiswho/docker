@@ -2,7 +2,7 @@ FROM php:7.1-fpm
 
 MAINTAINER Dmitry Lukashin <dlukashin@tetraweb.ru>
 
-ENV XDEBUG_VERSION 2.5.4
+ENV XDEBUG_VERSION 2.6.0
 
 # Install php extensions
 RUN buildDeps=" \
@@ -54,6 +54,8 @@ RUN buildDeps=" \
 #    && printf "\n" | pecl install memcache \
     && pecl install mongodb \
     && pecl install redis \
+    && pecl install swoole \
+    && pecl install ssh2 \
     && for ext in $phpModules; do \
            rm -f /usr/local/etc/php/conf.d/docker-php-ext-$ext.ini; \
        done \
